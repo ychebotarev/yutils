@@ -1,9 +1,16 @@
 import itertools
+import inspect
 
 class Iteratable():
     def __init__(self, iteratable):
         if not hasattr(iteratable, "__iter__"):
             raise TypeError("Enumerable must be instantiated with an iterable object")    
+
+        #is_generator = inspect.isgenerator(iteratable) or inspect.isgeneratorfunction(iteratable)
+        #self._iteratable = iteratable if not is_generator else [elem for elem in iteratable]
+
+        # if iteratable is generator there will be only a single iteration. 
+        # this is by design
         self._iteratable = iteratable
 
     def __iter__(self):

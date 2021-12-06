@@ -1,6 +1,10 @@
 from yutils.linq import Iteratable
 import pytest
 
+def test_construct():
+    with pytest.raises(TypeError):
+        Iteratable(False).first()
+
 def test_get_item():
     it=Iteratable(range(10))
     for i in range(10):
@@ -100,20 +104,31 @@ def test_skipwhile():
     assert len(result)==5
     assert sum(result)==5+6+7+8+9
 
-@pytest.mark.skip(reason="currently broken")
-def test_zip_generator():
-    def my_iter():
+def test_zip_iterator():
+    it1 = Iteratable([1,2,3,4])
+    it2 = Iteratable([1,2,3,4])
+
+    result = it1.zip(it2).to_list()
+
+    print(result == [(1, 1), (2, 2), (3, 3), (4, 4)])
+
+
+def text_generator():
+    def my_generator():
         for i in range(10):
             yield i
-
-    data = my_iter()
-    a = Iteratable(data)
-
+    a = Iteratable(my_generator())
     low = a.where(lambda x: x < 5)
+
+    # generator was exhausted
     high = a.where(lambda x: x >= 5)
 
-    result = list(low.zip(high))
-    print(result)
+    assert low.count() == 5
+    assert high.count() == 0
 
-    assert result == [(0, 5), (1, 6), (2, 7), (3, 8), (4, 9)]
-    assert list(zip(low, high))  == [(0, 5), (1, 6), (2, 7), (3, 8), (4, 9)]
+def test_select_many():
+    result = Iteratable([[0,1],[0,1],[0,1]]).select_many(lambda col:col).to_list()
+
+    assert len(result) == 6
+    for i in range(6):
+        assert i%2 == result[i]
