@@ -37,6 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -e '.[testing]'
+          pip install --requirement requirements.txt --find-links https://download.pytorch.org/whl/cpu/torch_stable.html --upgrade
       - name: Run tests
         run: |
           pytest
