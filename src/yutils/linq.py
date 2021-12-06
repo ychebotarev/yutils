@@ -94,9 +94,25 @@ class Iteratable():
     def zip(self, iteratable):
         return ZipGenerator((iter(self)), iteratable)
 
+    def chunk(self, chunk_size):
+        return ChunkGenerator((iter(self)), chunk_size)
+
+class ChunkGenerator(Iteratable):
+    def __init__(self, iteratable, chunk_size):
+        super().__init__(iteratable)
+        self.chunk_size = chunk_size
+    
+    def __iter__(self):
+        it = iter(self._iteratable)
+        while True:
+            chunk_slice = tuple(itertools.islice(it, self.chunk_size))
+            if not chunk_slice:
+                break
+            yield chunk_slice 
+
 class SelectGenerator(Iteratable):
     def __init__(self, iteratable, func):
-        super(SelectGenerator, self).__init__(iteratable)
+        super().__init__(iteratable)
         self.func = func
 
     def __iter__(self):
@@ -105,7 +121,7 @@ class SelectGenerator(Iteratable):
 
 class SelectManyGenerator(Iteratable):
     def __init__(self, iteratable, func):
-        super(SelectManyGenerator, self).__init__(iteratable)
+        super().__init__(iteratable)
         self.func = func
 
     def __iter__(self):
@@ -116,7 +132,7 @@ class SelectManyGenerator(Iteratable):
 
 class WhereGenerator(Iteratable):
     def __init__(self, iteratable, predicate):
-        super(WhereGenerator, self).__init__(iteratable)
+        super().__init__(iteratable)
         self.predicate = predicate
 
     def __iter__(self):
@@ -126,7 +142,7 @@ class WhereGenerator(Iteratable):
 
 class SkipGenerator(Iteratable):
     def __init__(self, iteratable, skip):
-        super(SkipGenerator, self).__init__(iteratable)
+        super().__init__(iteratable)
         self.skip = skip
 
     def __iter__(self):
@@ -138,7 +154,7 @@ class SkipGenerator(Iteratable):
 
 class ZipGenerator(Iteratable):
     def __init__(self, iteratable1, iteratable2):
-        super(ZipGenerator, self).__init__(iteratable1)
+        super().__init__(iteratable1)
         self.iteratable2 = iteratable2
     
     def __iter__(self):

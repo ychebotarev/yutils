@@ -132,3 +132,7 @@ def test_select_many():
     assert len(result) == 6
     for i in range(6):
         assert i%2 == result[i]
+
+def test_chunk():
+    result = Iteratable(range(10)).chunk(2).to_list()
+    assert len(result)  == 5
