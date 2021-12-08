@@ -1,2 +1,6 @@
+addict
+joblib
 numpy>=1.17.2
+pandas
+scipy
 torch>=1.7.*
