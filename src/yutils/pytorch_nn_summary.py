@@ -62,13 +62,13 @@ class PytorchModelSummaryCollector:
             str_params = f'{summary["params"]}'
             line_new = f"{summary['name']:>20}{str_input_shape:>20}{str_output_shape:>20}{str_params:>10}\n"
             summary_str += line_new
-        
+
         batch_size=1 if self.batch_size == -1 else self.batch_size
         # assume 4 bytes/number (float on cuda).
-        total_input_size = abs(np.prod(sum(self.input_size, ()))* batch_size * 4. / (1024 ** 2.))
+        total_input_size = np.prod(self.input_size) * batch_size * 4. / (1024 ** 2.)
         # x2 for gradients
-        total_output_size = abs(2. * self.total_output * 4. / (1024 ** 2.))  
-        total_params_size = abs(self.total_params * 4. / (1024 ** 2.))
+        total_output_size = 2. * self.total_output * 4. / (1024 ** 2.)
+        total_params_size = self.total_params * 4. / (1024 ** 2.)
         total_size = total_params_size + total_output_size + total_input_size        
         
 
@@ -133,7 +133,6 @@ class PytorchModelSummary:
         dtypes = [dtype]*len(self.input_size)
         x = [torch.rand(2, *in_size).type(dtype).to(device=device)
              for in_size, dtype in zip(self.input_size, dtypes)]
-        print('Hello world')
         summary_str = ''
         try:
             self.model(*x)

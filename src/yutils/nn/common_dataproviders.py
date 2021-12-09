@@ -4,8 +4,8 @@ from torch.utils.data import random_split
 
 # Some basic data providers
 class MNISTDataProvider(DataProvider):
-    def __init__(self, root_dir, image_transform):
-        super().__init__(root_dir, image_transform)
+    def __init__(self, root_dir, image_transform, batch_size):
+        super().__init__(root_dir, image_transform, batch_size)
     
     def prepare_data(self):
         self.test_dataset = datasets.MNIST(
@@ -16,8 +16,8 @@ class MNISTDataProvider(DataProvider):
 
 
 class FashionMNISTDataProvider(DataProvider):
-    def __init__(self, root_dir, transform):
-        super().__init__(root_dir, transform)
+    def __init__(self, root_dir, transform, batch_size):
+        super().__init__(root_dir, transform, batch_size)
     
     def prepare_data(self):
         self.test_dataset = datasets.FashionMNIST(

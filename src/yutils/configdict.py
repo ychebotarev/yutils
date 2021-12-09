@@ -1,3 +1,4 @@
+import json
 from addict import Dict
 
 class ConfigDict(Dict):
@@ -12,3 +13,26 @@ class ConfigDict(Dict):
         else:
             return value
         raise ex
+
+def get_default_config():
+    input="""{
+        "batch_size":64,
+        "optimizer": {
+            "Adam": {
+                "lr":0.01
+                }
+            },
+        "scheduler": {
+                "ReduceLROnPlateau": {
+                    "factor": 0.1, 
+                    "mode":"max", 
+                    "verbose":true
+                },
+                "extra": {
+                    "monitor": "val_acc"
+                }
+        }
+    }
+    """
+    cfg = ConfigDict(json.loads(input))
+    return cfg

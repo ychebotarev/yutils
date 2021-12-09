@@ -73,3 +73,19 @@ class ClassificationModule(BaseModule):
     def validation_epoch_end(self, outputs):
         loss = torch.stack(outputs).mean()
         self.log("val_loss", loss)        
+
+# class AutoEndoderModule(BaseModule):
+#     def __init__(self, data_provider, model, config):
+#         super().__init__(data_provider, model, config)
+
+#     def training_step(self, batch, batch_idx):
+#         return self.model_step(batch)
+
+#     def validation_step(self, batch, batch_idx):
+#         return self.model_step(batch)
+    
+#     def model_step(self, batch):
+#         x, _ = batch
+#         output = self(x)
+#         loss = F.mse_loss(output, x)
+#         return loss
