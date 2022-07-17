@@ -6,6 +6,7 @@ from torchmetrics.functional import accuracy
 
 from .nnconfig import NNConfig
 
+
 class BaseModule(LightningModule):
     def __init__(self, data_provider, model, config):
         super().__init__()
@@ -22,18 +23,16 @@ class BaseModule(LightningModule):
     def configure_optimizers(self):
         optimizer = NNConfig.get_optimizer(self.config, self.parameters())
         scheduler = None
-        if 'scheduler' in self.config:
-            scheduler = NNConfig.get_scheduler(
-                self.config, 
-                optimizer)
+        if "scheduler" in self.config:
+            scheduler = NNConfig.get_scheduler(self.config, optimizer)
         result = {}
-        result["optimizer"]=optimizer
+        result["optimizer"] = optimizer
 
-        if scheduler!= None:
-            if 'ReduceLROnPlateau' in self.config.scheduler:
-                result["lr_scheduler"]={ 
-                    "scheduler": scheduler, 
-                    "monitor": self.config.scheduler.extra.monitor
+        if scheduler != None:
+            if "ReduceLROnPlateau" in self.config.scheduler:
+                result["lr_scheduler"] = {
+                    "scheduler": scheduler,
+                    "monitor": self.config.scheduler.extra.monitor,
                 }
         return result
 
@@ -48,6 +47,7 @@ class BaseModule(LightningModule):
 
     def test_dataloader(self):
         return self.data_provider.test_dataloader()
+
 
 class ClassificationModule(BaseModule):
     def __init__(self, data_provider, model, config):
@@ -69,10 +69,11 @@ class ClassificationModule(BaseModule):
         self.log("val_acc", acc, prog_bar=True)
 
         return loss
-    
+
     def validation_epoch_end(self, outputs):
         loss = torch.stack(outputs).mean()
-        self.log("val_loss", loss)        
+        self.log("val_loss", loss)
+
 
 # class AutoEndoderModule(BaseModule):
 #     def __init__(self, data_provider, model, config):
@@ -83,7 +84,7 @@ class ClassificationModule(BaseModule):
 
 #     def validation_step(self, batch, batch_idx):
 #         return self.model_step(batch)
-    
+
 #     def model_step(self, batch):
 #         x, _ = batch
 #         output = self(x)

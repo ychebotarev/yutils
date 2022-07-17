@@ -1,6 +1,7 @@
 import json
 from addict import Dict
 
+
 class ConfigDict(Dict):
     def __missing__(self, name):
         raise KeyError(name)
@@ -9,13 +10,16 @@ class ConfigDict(Dict):
         try:
             value = super().__getattr__(name)
         except KeyError:
-            ex = AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
+            ex = AttributeError(
+                f"'{self.__class__.__name__}' object has no attribute '{name}'"
+            )
         else:
             return value
         raise ex
 
+
 def get_default_config():
-    input="""{
+    input = """{
         "batch_size":64,
         "optimizer": {
             "Adam": {
